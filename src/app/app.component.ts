@@ -14,12 +14,21 @@ export class AppComponent implements OnInit {
 
 /*     this.minhaPromise('José').then(result => console.log(result)).catch(erro => console.log(erro)); */
 
-    this.minhaObservable('Eduardo').subscribe(result => {
+/*     this.minhaObservable('Eduardo').subscribe(result => {
       console.log(result);
     },
     erro => {
       console.log(erro);
-    })
+    }) */
+
+    const observer = {
+      next: (valor: any) => console.log('NEXT: ', valor),
+      error: (erro: any) => console.log('ERRO: ', erro),
+      complete: () => console.log('cabo')
+    }
+
+    const obs = this.minhaObservable('Eduardo');
+    obs.subscribe(observer);
   }
 
   minhaPromise(nome: string): Promise<string>{
@@ -37,11 +46,12 @@ export class AppComponent implements OnInit {
   minhaObservable(nome: string): Observable<string>{
     return new Observable(subscriber => {
 
-      if(nome === 'Eduardo' ){
+      if(nome === 'Eduardo'){
         subscriber.next('Olá! ' + nome);
         setTimeout(() => {
           subscriber.next('Resposta com delay');
         }, 5000);
+        subscriber.complete();
       }else {
         subscriber.error('Ops! Deu erro'); 
       }
